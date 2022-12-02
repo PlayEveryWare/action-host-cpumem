@@ -1,0 +1,31 @@
+name: "PlayEveryWare host resources"
+description: "GitHub action to get cpu/memory resources available"
+outputs:
+  cpu_count:
+    description: Number of CPUs available
+    value: ${{ steps.cpu.outputs.value }}
+  memory_gb:
+    description: Gigbytes of memory available
+    value: ${{ steps.memory.outputs.value }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get available processors
+      id: cpu
+      shell: powershell
+      run: |
+        $cpus = (Get-WmiObject -Class Win32_Processor -Property NumberOfLogicalProcessors).NumberOfLogicalProcessors
+
+        $count = 0
+        foreach ($cpu in $cpus) {
+          $count += $cpu
+        }
+        echo "value=$count" >> $env:GITHUB_OUTPUT
+
+    - name: Get available memory
+      id: memory
+      shell: powershell
+      run: |
+        $mem = (Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property capacity -Sum).sum /1GB
+        echo "value=$mem" >> $env:GITHUB_OUTPUT
