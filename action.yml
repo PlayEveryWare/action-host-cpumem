@@ -1,10 +1,10 @@
 name: "PlayEveryWare host resources"
 description: "GitHub action to get cpu/memory resources available"
 outputs:
-  cpu_count:
+  cpu-count:
     description: Number of CPUs available
     value: ${{ steps.cpu.outputs.value }}
-  memory_gb:
+  memory-gb:
     description: Gigbytes of memory available
     value: ${{ steps.memory.outputs.value }}
 
